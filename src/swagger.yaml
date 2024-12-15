@@ -3,14 +3,80 @@ info:
   title: "My API"
   version: "1.0.0"
   description: "API documentation for my project"
+
 paths:
-  /:
-    get:
-      summary: "Hello World endpoint"
-      description: "Returns a simple Hello World message"
-      responses:
-        "200":
-          description: "Successful response"
+  /signup:
+    post:
+      summary: "User Registration"
+      description: "Creates a new user with the provided username, email, and password."
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "User registration data"
+          required: true
           schema:
-            type: "string"
-            example: "Hello, World!"
+            type: "object"
+            properties:
+              username:
+                type: "string"
+                example: "johndoe"
+              email:
+                type: "string"
+                example: "johndoe@example.com"
+              password:
+                type: "string"
+                example: "password123"
+      responses:
+        201:
+          description: "User successfully created"
+        400:
+          description: "Username or email already exists"
+        500:
+          description: "Error registering user"
+          
+  /login:
+    post:
+      summary: "User Login"
+      description: "Logs in an existing user and returns a JWT token."
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "User login credentials"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              username:
+                type: "string"
+                example: "johndoe"
+              password:
+                type: "string"
+                example: "password123"
+      responses:
+        200:
+          description: "Login successful, returns JWT token"
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwY2Q0M2FjLTgyNmUtNGYxOS1hNzY0LWJhNjY5M2Q1OGM5OCIsInVzZXJuYW1lIjoiY29kZXMiLCJpYXQiOjE2NzQ4NzU3NjgsImV4cCI6MTY3NDg3OTM2OH0.i9m9v7f7cV9v44ob5sO0oKc1Nl5g-J6KlFfFfVq9f6e"
+        400:
+          description: "Invalid username or password"
+        500:
+          description: "Error logging in"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
