@@ -1,5 +1,6 @@
 import express from 'express';
 import connectDB from './utils/db';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import authRoutes from './routes/auth_route'
@@ -12,6 +13,11 @@ connectDB();
 
 app.use("/auth", authRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
