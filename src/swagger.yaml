@@ -1,0 +1,16 @@
+swagger: "2.0"
+info:
+  title: "My API"
+  version: "1.0.0"
+  description: "API documentation for my project"
+paths:
+  /:
+    get:
+      summary: "Hello World endpoint"
+      description: "Returns a simple Hello World message"
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            type: "string"
+            example: "Hello, World!"
