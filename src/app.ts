@@ -2,15 +2,17 @@ import express from 'express';
 import connectDB from './utils/db';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import cors from 'cors';
+import authRoutes from "./routes/auth_routes";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.use(cors());
+
+app.use("/auth", authRoutes);
 
 const swaggerDocument = YAML.load('./src/swagger.yaml');
 
