@@ -1,16 +1,188 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  title: "My API"
-  version: "1.0.0"
-  description: "API documentation for my project"
+  title: Authentication API
+  description: API for user authentication, including registration, login, logout, and token refresh functionality
+  version: 1.0.0
+  contact:
+    name: Your Name
+    email: your-email@example.com
+    url: https://your-website.com
+
+servers:
+  - url: http://localhost:3000/auth
+    description: Local server
+
 paths:
-  /:
-    get:
-      summary: "Hello World endpoint"
-      description: "Returns a simple Hello World message"
+  /register:
+    post:
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        description: User registration data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - username
+                - password
+              properties:
+                email:
+                  type: string
+                  example: "user@example.com"
+                username:
+                  type: string
+                  example: "user123"
+                password:
+                  type: string
+                  example: "password123"
       responses:
-        "200":
-          description: "Successful response"
-          schema:
-            type: "string"
-            example: "Hello, World!"
+        '200':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: "60b8d295f5b9b56cd98e9e6f"
+                  email:
+                    type: string
+                    example: "user@example.com"
+                  username:
+                    type: string
+                    example: "user123"
+        '400':
+          description: Invalid input
+
+  /login:
+    post:
+      summary: Login a user and generate access and refresh tokens
+      operationId: login
+      requestBody:
+        description: User login data
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: "user123"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        '200':
+          description: Successful login with tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  refreshToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Invalid username or password
+        '500':
+          description: Server error
+
+  /logout:
+    post:
+      summary: Log out the user by invalidating their refresh token
+      operationId: logout
+      requestBody:
+        description: Refresh token for logging out
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Successful logout
+        '400':
+          description: Invalid or missing refresh token
+
+  /refresh:
+    post:
+      summary: Refresh access and refresh tokens using the refresh token
+      operationId: refresh
+      requestBody:
+        description: Refresh token to get new access and refresh tokens
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Successful token refresh
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  refreshToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Invalid or expired refresh token
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - username
+        - password
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the user
+          example: "60b8d295f5b9b56cd98e9e6f"
+        email:
+          type: string
+          description: User's email address
+          example: "user@example.com"
+        username:
+          type: string
+          description: User's username
+          example: "user123"
+        password:
+          type: string
+          description: User's hashed password
+          example: "$2b$10$Wz45zR.LklCfwHGxe97rYeH9mjVpF9zFj2O0a3RsTjbdF5uV.eLaG"
+        refreshToken:
+          type: string
+          description: Refresh token associated with the user
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        __v:
+          type: integer
+          description: Mongoose version key
+          example: 0
