@@ -3,10 +3,7 @@ import connectDB from './utils/db';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cors from 'cors';
-import dotenv from "dotenv"
 import authRoutes from "./routes/auth_routes";
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
