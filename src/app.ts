@@ -2,6 +2,9 @@ import express from 'express';
 import connectDB from './utils/db';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
